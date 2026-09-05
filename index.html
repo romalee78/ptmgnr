@@ -240,28 +240,14 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
 <body>
 
 <div class="container"><div id="online-status" class="feature-status" style="margin-bottom:10px">🟡 Menyiapkan koneksi database online...</div><div class="admin-only feature-actions" style="margin-bottom:10px"><button type="button" class="btn-success" onclick="simpanWorkspaceOnline(true)">☁️ Simpan ke Cloud</button><button type="button" onclick="publikasikanWorkspaceOnline()">🌐 Publikasikan Event</button></div>
-    <!-- PANEL OTENTIKASI & REGISTRASI AKUN BARU -->
+    <!-- PANEL LOGIN ADMIN/PANITIA & AKSES PUBLIK -->
     <div id="auth-section" style="background: var(--light); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
         <div id="login-box" class="grid-2" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); align-items: flex-end; margin-bottom: 0;">
-            <div class="form-group" style="margin-bottom:0;"><label>Akses Akun</label><select id="user-role"><option value="publik">Publik / Umum</option></select><input id="online-username" type="text" autocomplete="username" placeholder="Username panitia" style="display:none;margin-top:8px;"></div>
-            <div class="form-group" id="pass-field" style="margin-bottom:0;"><label>Kata Sandi</label><input type="password" id="user-pass" autocomplete="off" placeholder="Kosongkan jika Publik"></div>
-            <div class="form-group" style="margin-bottom:0;"><button type="button" onclick="loginSistem()">Masuk</button></div>
-            <div class="form-group" style="margin-bottom:0;"><button type="button" class="btn-warning" onclick="bukaModalDaftar()">Daftar Panitia/Undangan</button></div>
+            <div class="form-group" style="margin-bottom:0;"><label>Akses</label><div style="padding:10px;border:1px solid #ccc;border-radius:6px;background:#fff;font-weight:bold;">Admin / Panitia</div></div>
+            <div class="form-group" id="pass-field" style="margin-bottom:0;"><label>Kata Sandi Admin / Panitia</label><input type="password" id="user-pass" autocomplete="current-password" placeholder="Masukkan password admin"></div>
+            <div class="form-group" style="margin-bottom:0;"><button type="button" onclick="loginSistem()">Login Admin / Panitia</button></div>
         </div>
-        <div id="auth-success-status" style="display:none; color: green; font-weight: bold; margin-top:10px;">
-            🔓 Sesi Aktif: <span id="active-user-display">Publik</span> | <a href="#" onclick="logoutSistem()" style="color:var(--danger)">Keluar (Logout)</a>
-        </div>
-        
-        <div id="register-box" style="display:none; margin-top:20px; padding-top:15px; border-top:1px dashed #ccc;">
-            <h3>📝 Registrasi Akun Sistem Baru</h3>
-            <div class="grid-2" style="grid-template-columns: 1fr 1fr 1fr; align-items: flex-end;">
-                <div class="form-group"><label>Username Baru</label><input type="text" id="reg-user" placeholder="Contoh: panitia_meja1"></div>
-                <div class="form-group"><label>Password Akun</label><input type="password" id="reg-pass" placeholder="Password Rahasia"></div>
-                <div class="form-group"><label>Tipe Otoritas</label><select id="reg-role"><option value="admin">Admin / Panitia Inti</option><option value="undangan">Tamu Undangan Khusus</option></select></div>
-            </div>
-            <button type="button" class="btn-success" onclick="simpanAkunBaru()">Selesaikan Registrasi Akun</button>
-            <button type="button" style="background:#555;" onclick="tutupModalDaftar()">Batal</button>
-        </div>
+        <div id="auth-success-status" style="display:none; color: green; font-weight: bold; margin-top:10px;">🔓 Sesi Admin Aktif: <span id="active-user-display">ADMIN / PANITIA</span> | <a href="#" onclick="logoutSistem()" style="color:var(--danger)">Keluar (Logout)</a></div>
     </div>
 
     <!-- MAIN MENU NAVIGATION: MOBILE TOP-RIGHT -->
@@ -302,7 +288,7 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
 
     <button type="button" id="back-float" class="back-float" onclick="kembaliHalaman()">‹ Kembali</button>
 
-    <!-- PAGE 1: BERANDA & FORM PENDAFTARAN (TERBUKA UNTUK PUBLIK & UNDANGAN) -->
+    <!-- PAGE 1: BERANDA & FORM PENDAFTARAN (TERBUKA UNTUK PUBLIK) -->
     <div id="page-beranda" class="app-page active">
         <section class="mobile-shortcuts" aria-label="Shortcut utama">
             <button type="button" class="shortcut-card shortcut-home" onclick="gantiMenu('beranda');scrollKeBagian('page-beranda')"><span class="shortcut-icon">🏠</span><span><b>Beranda</b><small>Informasi turnamen</small></span></button>
@@ -356,10 +342,10 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
             </div>
         </div>
 
-        <!-- FORM PENDAFTARAN ATLET (TERBUKA UNTUK PUBLIK & UNDANGAN) -->
+        <!-- FORM PENDAFTARAN ATLET (TERBUKA UNTUK PUBLIK) -->
         <div id="form-pendaftaran" style="background: white; border: 1px solid #ddd; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
             <h2>➕ Form Daftarkan Atlet Kontestan Baru</h2>
-            <p style="font-size: 13px; color: #555;">Catatan Keamanan: Pendaftaran dari akun Publik dan Undangan otomatis terkunci pada status <b>Belum Bayar</b> demi validasi keuangan panitia.</p>
+            <p style="font-size: 13px; color: #555;">Catatan Keamanan: Pendaftaran dari Publik otomatis terkunci pada status <b>Belum Bayar</b> demi validasi keuangan panitia.</p>
             <div class="grid-2">
                 <div class="form-group"><label>Nama Pemain / Pasangan</label><input type="text" id="p-nama" placeholder="Ketik nama lengkap peserta"></div>
                 <div class="form-group"><label>Asal Klub / PTM</label><input type="text" id="p-klub" placeholder="Ketik nama asal klub/PTM"></div>
@@ -560,7 +546,7 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
     <div id="page-score" class="app-page">
         <div class="page-toolbar-mobile"><strong>Papan Skor Layar</strong><button type="button" onclick="kembaliHalaman()">‹ Kembali</button></div>
         <h2>🎛️ Konsol Kontrol &amp; Proyeksi Papan Skor Digital</h2>
-        <p>Akses Terbuka: Akun <b>Admin</b> dan <b>Undangan</b> berhak mengoperasikan kontrol papan skor ini menggunakan tombol klik layar proyektor atau tombol pintas keyboard fisik.</p>
+        <p>Akses Terbuka: Hanya akun <b>Admin / Panitia</b> yang berhak mengoperasikan kontrol papan skor ini menggunakan tombol klik layar proyektor atau tombol pintas keyboard fisik.</p>
         
         <div class="grid-2" style="grid-template-columns: 1fr 2fr;">
             <div style="background: var(--light); padding: 15px; border-radius: 8px;">
@@ -640,7 +626,6 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
     let db = {
         users: [
             { user: 'admin', pass: 'admin888', role: 'admin' },
-            { user: 'tamu', pass: 'tamu777', role: 'undangan' }
         ],
         currentUser: { user: 'publik', role: 'publik' },
         config: { title: 'TOURNAMENT TENNIS MEJA PTM PINGPONG EVENT PORTAL OPEN SERIES CUP', tgl: '15 Oktober 2026', ptm: 'Pingpong Event Portal', biaya: '50.000', tm: '10 Oktober 2026', setFormat: 5, b1: 'Juara Series Sebelumnya: PTM Merdeka Group Jaya.', b2: 'Kualifikasi penyisihan grup meja 1 s/d meja 4 sedang berjalan ketat.', b3: 'Open Registrasi Double Series Cup Nasional Mandiri dibuka s/d akhir pekan.', b4: 'Kejuaraan internal penutupan tahun akan digelar Desember 2026.', rules: 'Aturan dan regulasi pertandingan akan diinformasikan oleh panitia di halaman ini.', infoPertandingan: 'Informasi pertandingan akan diperbarui oleh panitia.', jamMulai: '09.00', durasi: 15, jumlahMeja: 4, banner: {enabled:false,dataUrl:'',name:'',title:'PENGUMUMAN TURNAMEN',subtitle:'Informasi terbaru dari panitia'} },
@@ -745,19 +730,15 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
         let parsed=null;
         if(saved){try{parsed=JSON.parse(saved)}catch(e){}}
         if(!parsed) return;
-        const users=Array.isArray(parsed.users)?parsed.users:db.users;
+        const users=[{ user:'admin', pass:'admin888', role:'admin' }];
         db.users=users;
-        const firstAdmin=users.find(u=>u.role==='admin')?.user||'admin';
+        const firstAdmin='admin';
         if(!localStorage.getItem(storageKeyUntukUser(firstAdmin))){
             const legacy=normalisasiWorkspace(parsed,firstAdmin);
             localStorage.setItem(storageKeyUntukUser(firstAdmin),JSON.stringify(legacy));
         }
-        users.forEach(u=>{
-            if(u.role==='admin'||u.role==='undangan'){
-                const key=storageKeyUntukUser(u.user);
-                if(!localStorage.getItem(key)) localStorage.setItem(key,JSON.stringify(workspaceKosong(u.user)));
-            }
-        });
+        const key=storageKeyUntukUser('admin');
+        if(!localStorage.getItem(key)) localStorage.setItem(key,JSON.stringify(workspaceKosong('admin')));
     }
 
     if (onlineReady) {
@@ -947,7 +928,7 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
             const row=snap.data();
             const owner=row.ownerUsername || db.workspaceOwner || db.currentUser?.user || 'admin';
             db=normalisasiWorkspace(row.data,owner);
-            db.currentUser=db.currentUser && db.currentUser.role ? db.currentUser : {user:owner,role:'undangan'};
+            db.currentUser=db.currentUser && db.currentUser.role ? db.currentUser : {user:'admin',role:'admin'};
             localStorage.setItem(storageKeyUntukUser(owner),JSON.stringify(db));
             renderSemuaSetelahAuth();
             setOnlineStatus('🟢 Tersinkron real-time dengan database online',true);
@@ -973,35 +954,13 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
     }
 
     async function loginSistem() {
-        const user = (onlineReady && document.getElementById('online-username')?.style.display !== 'none') ? document.getElementById('online-username').value.trim().toLowerCase() : document.getElementById('user-role').value;
-        const pass = document.getElementById('user-pass').value;
-        if (user === 'publik') {
-            const owner=localStorage.getItem('ittf_pro_v5_active_owner') || db.workspaceOwner || 'admin';
-            muatWorkspace(owner);
-            db.currentUser = { user: 'publik', role: 'publik', viewingOwner: owner };
-        } else if (onlineReady) {
-            try {
-                const email = usernameToFirebaseEmail(user);
-                await firebaseAuth.signInWithEmailAndPassword(email, pass);
-                const prof=await firestore.collection('profiles').doc(firebaseAuth.currentUser.uid).get();
-                const profile=prof.exists?prof.data():{username:user,role:'undangan'};
-                db.currentUser={user:profile.username||user,role:profile.role||'undangan'};
-                db.workspaceOwner=db.currentUser.user;
-                db.workspaceId='workspace_'+db.workspaceOwner;
-                await muatWorkspaceOnline();
-                localStorage.setItem('ittf_pro_v5_active_owner',db.workspaceOwner);
-                await renderSemuaSetelahAuth();
-                penerapanOtoritasAksesHalaman();
-                pasangListenerWorkspaceOnline();
-                setOnlineStatus('🟢 Login berhasil • database cloud aktif',true);
-                return;
-            } catch(e){ alert('Login online gagal: '+firebaseErrorMessage(e)); return; }
-        } else {
-            const target = db.users.find(u => u.user === user && u.pass === pass);
-            if (target) { muatWorkspace(target.user); db.currentUser = { user: target.user, role: target.role }; localStorage.setItem('ittf_pro_v5_active_owner',target.user); }
-            else { alert('Kata sandi salah!'); return; }
-        }
+        const pass=document.getElementById('user-pass').value;
+        if(pass!=='admin888'){ alert('Kata sandi Admin / Panitia salah!'); return; }
+        const user='admin';
+        muatWorkspace(user); db.currentUser={user:'admin',role:'admin'}; db.workspaceOwner='admin'; db.workspaceId='workspace_admin';
+        localStorage.setItem('ittf_pro_v5_active_owner','admin');
         sesuaikanOpsiDivisi(); sinkronisasiDOMInfo(); renderDaftarPeserta(); renderPoolsTabelSilang(); renderBaganSistemGugur(); generateExcelJadwalView(); renderBukuKontak(); renderKontakPanitia(); renderKontakPanitiaPublik(); sinkronkanHistoriPertandingan(); updateBannerAdminStatus(); penerapanOtoritasAksesHalaman();
+        setOnlineStatus('🟢 Login Admin berhasil',true);
     }
 
     function usernameToFirebaseEmail(username){ return String(username||'').toLowerCase()+'@pingpong-event.local'; }
@@ -1026,13 +985,6 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
 
     function penerapanOtoritasAksesHalaman() {
         const role = db.currentUser.role;
-        const selectElement = document.getElementById('user-role');
-        selectElement.innerHTML = '<option value="publik">Publik / Umum (Hanya Lihat)</option>';
-        db.users.forEach(u => { selectElement.innerHTML += `<option value="${u.user}">${u.user.toUpperCase()} [${u.role.toUpperCase()}]</option>`; });
-        selectElement.value = db.currentUser.user;
-        const onlineUserInput=document.getElementById('online-username');
-        if(onlineUserInput){ onlineUserInput.style.display = (onlineReady && role==='publik') ? 'block' : (onlineReady ? 'block' : 'none'); onlineUserInput.value = role==='publik'?'':(db.currentUser.user||''); }
-        if(onlineReady){ selectElement.style.display='none'; onlineUserInput.style.display='block'; } else { selectElement.style.display='block'; onlineUserInput.style.display='none'; }
 
         // Aturan Form Pendaftaran Status Bayar
         const pBayarSelect = document.getElementById('p-bayar');
@@ -1062,33 +1014,6 @@ body{padding:10px}.container{padding:12px;border-radius:16px}.main-nav{display:g
             document.getElementById('auth-success-status').style.display = 'block';
             document.getElementById('login-box').style.display = 'none';
         }
-    }
-
-    function bukaModalDaftar() { document.getElementById('register-box').style.display = 'block'; }
-    function tutupModalDaftar() { document.getElementById('register-box').style.display = 'none'; }
-
-    async function simpanAkunBaru() {
-        const user = document.getElementById('reg-user').value.trim().toLowerCase();
-        const pass = document.getElementById('reg-pass').value.trim();
-        const role = document.getElementById('reg-role').value;
-        const license = prompt('Masukkan Kode Verifikasi Pemilik Situs (Owner License Key):');
-        if (license !== 'Owner@roma') { alert('Lisensi Pemilik Salah! Pendaftaran Akun Ditolak.'); return; }
-        if(!user || !pass) { alert('Kolom wajib diisi!'); return; }
-        if(!/^[a-z0-9_-]{3,30}$/.test(user)){ alert('Username 3-30 karakter: huruf kecil, angka, underscore, atau strip.'); return; }
-        if(onlineReady){
-            try{
-                const cred=await firebaseAuth.createUserWithEmailAndPassword(usernameToFirebaseEmail(user),pass);
-                await firestore.collection('profiles').doc(cred.user.uid).set({username:user,role:'undangan',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-                const ws=workspaceKosong(user); await firestore.collection('workspaces').doc(cred.user.uid).set({ownerUsername:user,createdAt:firebase.firestore.FieldValue.serverTimestamp(),data:ws});
-                await firebaseAuth.signOut();
-                tutupModalDaftar(); alert(`Akun ${user} berhasil dibuat di server sebagai akun panitia/undangan. Role admin hanya dapat diberikan melalui pengaturan server.`); return;
-            }catch(e){ alert('Pendaftaran online gagal: '+firebaseErrorMessage(e)); return; }
-        }
-        if(db.users.some(u=>u.user===user)){ alert('Username tersebut sudah digunakan. Silakan pilih username lain.'); return; }
-        db.users.push({ user, pass, role });
-        localStorage.setItem(storageKeyUntukUser(user),JSON.stringify(workspaceKosong(user)));
-        localStorage.setItem('ittf_pro_v5_users',JSON.stringify(db.users));
-        tutupModalDaftar(); penerapanOtoritasAksesHalaman(); alert(`Akun ${user} berhasil dibuat. Setiap akun panitia memiliki ruang data/event terpisah.`);
     }
 
     function sesuaikanOpsiDivisi() {
