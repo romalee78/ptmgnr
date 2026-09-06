@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0756b8">
+<title>PTM GNR — Otewe Jago</title>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js"></script>
+<style>
+:root{--b:#0756b8;--d:#092544;--y:#ffd21c;--bg:#f3f7fc;--line:#dbe4ef;--ok:#16803d;--red:#c62828}
+*{box-sizing:border-box}body{margin:0;font:15px system-ui,Arial;background:var(--bg);color:#182334}button,input,select,textarea{font:inherit}button{cursor:pointer}
+.top{background:var(--d);color:#fff;text-align:center;padding:9px}.nav{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:9px;display:flex;gap:10px;align-items:center}.brand{font-weight:900;color:var(--d);white-space:nowrap}.brand span{color:var(--b)}nav{display:flex;gap:5px;overflow:auto;flex:1}nav button{border:0;background:#fff;padding:9px;border-radius:9px;white-space:nowrap}nav button:hover{background:#eaf2ff;color:var(--b)}.admin{background:var(--d);color:#fff;border:0;border-radius:9px;padding:9px}
+.hero{max-width:1150px;margin:16px auto;padding:30px 18px;border-radius:20px;color:#fff;background:linear-gradient(135deg,#062d67,#0756b8,#1687df)}.hero h1{font-size:clamp(40px,8vw,68px);margin:0}.slogan{color:var(--y);font-weight:900;font-size:22px}.hero p{max-width:750px;line-height:1.6}.wrap{max-width:1150px;margin:auto;padding:0 12px 50px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 5px 20px #10233f0a}.stat b{font-size:28px;color:var(--b)}.stat small{color:#68778d;display:block}h2{color:var(--d)}label{font-weight:700;font-size:13px;display:block;margin:8px 0 5px}input,select,textarea{width:100%;padding:10px;border:1px solid #c9d5e5;border-radius:9px;background:#fff}textarea{min-height:110px}.counter{text-align:right;color:#69788c;font-size:12px}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--b);color:#fff;font-weight:800}.btn.light{background:#eaf2ff;color:var(--b)}.btn.ok{background:var(--ok)}.btn.red{background:var(--red)}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.notice{padding:11px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:10px;color:#17457c}.table{overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;background:#fff}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{background:#f2f6fb}.badge{padding:4px 8px;border-radius:99px;font-size:11px;font-weight:800;background:#edf1f5}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.gallery figure{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}.gallery img{width:100%;height:150px;object-fit:cover}.gallery figcaption{padding:7px;font-size:12px}.page{display:none}.page.on{display:block}.adminOnly{display:none}.isAdmin .adminOnly{display:block}.isAdmin .publicOnly{display:none}footer{background:var(--d);color:#dce9f8;padding:25px 14px}.foot{max-width:1150px;margin:auto}
+@media(max-width:800px){.grid,.grid3{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.nav{flex-wrap:wrap}.brand{flex:1}nav{order:3;flex-basis:100%}.gallery{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr)}.hero{margin:8px;border-radius:14px}.hero h1{font-size:44px}}
+</style>
+</head>
+<body>
+<div class="top">🏓 PTM GNR • OTEWE JAGO • GOR TENIS MEJA</div>
+<div class="nav"><div class="brand">🏓 <span>PTM GNR</span></div>
+<nav><button onclick="show('home')">Beranda</button><button onclick="show('profil')">Profil</button><button onclick="show('member')">Member</button><button onclick="show('ranking')">Ranking</button><button onclick="show('event')">Event</button><button onclick="show('histori')">Histori</button><button onclick="show('latihan')">Latihan</button><button onclick="show('coach')">Coach</button><button onclick="show('organisasi')">Organisasi</button><button onclick="show('galeri')">Galeri</button><button onclick="show('iuran')">Iuran</button></nav>
+<button class="admin" onclick="show(isAdmin?'admin':'login')">🔐 Admin</button></div>
+
+<section id="home" class="page on"><div class="hero"><div id="logoHome"></div><div class="slogan">OTEWE JAGO</div><h1>PTM GNR</h1><p id="heroInfo">Tempat berkumpul, berlatih, bertanding, dan berkembang bersama penghobi tenis meja.</p><div class="actions"><button class="btn" onclick="show('member')">👥 Daftar Member</button><button class="btn light" onclick="show('event')">🏆 Event & Liga</button></div></div>
+<div class="wrap"><div class="grid"><div class="card stat"><b id="nMember">0</b><small>Member</small></div><div class="card stat"><b id="nActive">0</b><small>Member Aktif</small></div><div class="card stat"><b id="nEvent">0</b><small>Event</small></div><div class="card stat"><b id="nPodium">0</b><small>Histori Podium</small></div></div>
+<div class="panel"><h2>📣 Informasi PTM GNR</h2><div id="homeInfo">Belum ada informasi admin.</div></div>
+<div class="panel"><h2>🏆 Event Terbaru</h2><div id="homeEvents" class="grid3"></div></div>
+<div class="panel"><h2>🎂 Ulang Tahun Member</h2><div id="birthdays" class="grid3"></div></div></div></section>
+
+<section id="profil" class="page"><div class="wrap"><div class="panel"><h2>🏓 Profil PTM GNR</h2><div id="profile">Profil belum diisi.</div></div><div class="panel"><h3>📍 GOR & Kontak</h3><div id="contact">Belum ada informasi.</div></div><div class="panel"><h3>🎵 Lagu PTM GNR</h3><div id="music"></div></div></div></section>
+
+<section id="member" class="page"><div class="wrap"><div class="panel"><h2>👥 Daftar Nama Member</h2><div class="notice">Publik hanya melihat nama, divisi dan ranking. Data pribadi dan nomor WhatsApp hanya untuk Admin.</div><input id="search" placeholder="🔎 Cari nama..." oninput="renderMembers()"><div class="table"><table><thead><tr><th>No</th><th>Nama</th><th>Divisi</th><th>Poin</th><th>Status</th></tr></thead><tbody id="members"></tbody></table></div></div>
+<div class="panel publicOnly"><h3>📝 Form Pendaftaran Member</h3><div class="grid2"><div><label>Nama Lengkap</label><input id="rNama"></div><div><label>WhatsApp</label><input id="rWa"></div><div><label>Tanggal Lahir</label><input id="rBirth" type="date"></div><div><label>Divisi/Level</label><select id="rDiv"><option>Pemula</option><option>Divisi C</option><option>Divisi B</option><option>Divisi A</option><option>Open</option></select></div><div><label>Alamat</label><input id="rAlamat"></div><div><label>Klub</label><input id="rKlub" value="PTM GNR"></div></div><button class="btn" onclick="registerMember()">Kirim Pendaftaran</button></div>
+<div class="panel adminOnly"><h3>➕ Tambah Member Admin</h3><div class="grid2"><div><label>Nama</label><input id="aNama"></div><div><label>WhatsApp</label><input id="aWa"></div><div><label>Tanggal Lahir</label><input id="aBirth" type="date"></div><div><label>Divisi</label><select id="aDiv"><option>Pemula</option><option>Divisi C</option><option>Divisi B</option><option>Divisi A</option><option>Open</option></select></div><div><label>Alamat</label><input id="aAlamat"></div><div><label>Poin</label><input id="aPoin" type="number" value="0"></div></div><button class="btn" onclick="addMember()">Simpan Member</button></div></div></section>
+
+<section id="ranking" class="page"><div class="wrap"><div class="panel"><h2>📊 Ranking Poin Pemain</h2><div class="table"><table><thead><tr><th>Rank</th><th>Pemain</th><th>Divisi</th><th>Poin</th></tr></thead><tbody id="rank"></tbody></table></div></div></div></section>
+
+<section id="event" class="page"><div class="wrap"><div class="panel"><h2>🏆 Liga Internal & Turnamen</h2><div id="events" class="grid2"></div></div>
+<div class="panel adminOnly"><h3>➕ Buat Event</h3><div class="grid2"><div><label>Nama Event</label><input id="eNama"></div><div><label>Jenis</label><select id="eJenis"><option>Liga Internal</option><option>Turnamen Single</option><option>Turnamen Double</option><option>Piala Bergilir</option><option>Lainnya</option></select></div><div><label>Tanggal</label><input id="eTgl" type="date"></div><div><label>Lokasi</label><input id="eLok" value="GOR PTM GNR"></div><div style="grid-column:1/-1"><label>Keterangan</label><textarea id="eKet"></textarea></div></div><button class="btn" onclick="addEvent()">Simpan Event</button></div>
+<div class="panel adminOnly"><h3>🥇 Catat Podium</h3><div class="grid3"><div><label>Event</label><select id="pEvent"></select></div><div><label>Juara 1</label><input id="p1"></div><div><label>Juara 2</label><input id="p2"></div><div><label>Juara 3</label><input id="p3"></div></div><button class="btn ok" onclick="addPodium()">Simpan Histori</button></div></div></section>
+
+
+<section id="latihan" class="page"><div class="wrap">
+<div class="panel"><h2>🏓 Jadwal Latihan PTM GNR</h2>
+<div class="notice">Jadwal latihan rutin dan status operasional GOR ditampilkan di sini.</div>
+<div id="trainingSchedule" class="grid3"></div>
+</div>
+<div class="panel"><h2>🏢 Status GOR</h2><div id="gorStatusPublic"></div></div>
+<div class="panel"><h3>📅 Jadwal Latihan Mingguan</h3><div class="table"><table><thead><tr><th>Hari</th><th>Jam</th><th>Keterangan</th></tr></thead><tbody id="trainingTable"></tbody></table></div></div>
+<div class="panel adminOnly"><h3>⚙️ Pengaturan Jadwal & Status GOR</h3>
+<div class="grid2">
+<div><label>Status GOR</label><select id="gorStatus"><option value="Buka">🟢 Buka</option><option value="Libur">🔴 Libur</option></select></div>
+<div><label>Alasan/Keterangan Libur</label><input id="gorReason" placeholder="Contoh: Ada kegiatan khusus"></div>
+<div><label>Hari Latihan</label><select id="trDay"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option></select></div>
+<div><label>Jam Latihan</label><input id="trTime" placeholder="19.00 - 22.00"></div>
+<div style="grid-column:1/-1"><label>Keterangan</label><input id="trNote" placeholder="Latihan umum / member / junior / dll."></div>
+</div>
+<div class="actions"><button class="btn" onclick="saveGorStatus()">Simpan Status GOR</button><button class="btn light" onclick="sendGorHolidayWA()">📱 Kirim Info Libur ke WhatsApp</button><button class="btn" onclick="addTraining()">Tambah Jadwal Latihan</button></div>
+</div>
+</div></section>
+
+<section id="histori" class="page"><div class="wrap"><div class="panel"><h2>📚 Histori Juara</h2><div class="table"><table><thead><tr><th>Tanggal</th><th>Event</th><th>🥇</th><th>🥈</th><th>🥉</th></tr></thead><tbody id="history"></tbody></table></div></div></div></section>
+
+<section id="iuran" class="page"><div class="wrap"><div class="panel"><h2>💳 Iuran Bulanan</h2><div class="notice">Laporan iuran bersifat privat dan hanya tersedia untuk Admin. Admin dapat mengirim notifikasi WhatsApp dengan pesan otomatis.</div><div class="adminOnly"><div class="grid3"><div><label>Bulan</label><input id="dMonth" type="month"></div><div><label>Member</label><select id="dMember"></select></div><div><label>Status</label><select id="dStatus"><option>Sudah Bayar</option><option>Belum Bayar</option></select></div><div><label>Nominal</label><input id="dNominal" type="number" value="0"></div></div><button class="btn" onclick="saveDue()">Simpan Iuran</button><div class="table"><table><thead><tr><th>Bulan</th><th>Member</th><th>Status</th><th>Nominal</th><th>WA</th></tr></thead><tbody id="dues"></tbody></table></div></div></div></div></section>
+
+
+<section id="coach" class="page"><div class="wrap">
+<div class="panel"><h2>🏓 Jadwal Coach PTM GNR</h2><div id="coachPublic" class="grid3"></div></div>
+<div class="panel adminOnly"><h3>➕ Tambah Jadwal Coach</h3>
+<div class="grid2"><div><label>Nama Coach</label><input id="cName"></div><div><label>Hari</label><select id="cDay"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option></select></div><div><label>Jam</label><input id="cTime" placeholder="19.00 - 21.00"></div><div><label>Program</label><input id="cProgram" placeholder="Teknik / fisik / sparring / junior"></div><div style="grid-column:1/-1"><label>Catatan</label><textarea id="cNote"></textarea></div></div>
+<button class="btn" onclick="addCoach()">Simpan Jadwal Coach</button>
+</div></div></section>
+
+<section id="organisasi" class="page"><div class="wrap">
+<div class="panel"><h2>🏢 Struktur Organisasi PTM GNR</h2><div id="orgPublic"></div></div>
+<div class="panel adminOnly"><h3>⚙️ Custom Struktur Organisasi</h3>
+<div class="notice">Isi bebas sesuai susunan pengurus PTM GNR. Contoh: Pembina, Ketua, Wakil Ketua, Sekretaris, Bendahara, Koordinator Lapangan, Coach, Humas, dll.</div>
+<textarea id="setOrg" maxlength="5000" placeholder="Contoh:
+Pembina: ...
+Ketua: ...
+Wakil Ketua: ...
+Sekretaris: ...
+Bendahara: ...
+Koordinator Latihan: ...
+Coach: ...
+Humas: ..."></textarea>
+<div id="orgCount" class="counter">0/5000</div>
+<button class="btn" onclick="saveSettings({org:val('setOrg')})">Simpan Struktur Organisasi</button>
+</div></div></section>
+
+<section id="galeri" class="page"><div class="wrap"><div class="panel"><h2>📸 Galeri</h2><div id="gallery" class="gallery"></div></div><div class="panel adminOnly"><h3>⬆️ Upload Foto</h3><input id="photo" type="file" accept="image/*"><input id="caption" placeholder="Caption foto"><button class="btn" onclick="uploadPhoto()">Upload Foto</button><small id="photoStatus"></small></div><div class="panel adminOnly"><h3>🎵 Upload Lagu</h3><input id="audio" type="file" accept="audio/*"><input id="title" placeholder="Judul lagu"><button class="btn" onclick="uploadAudio()">Upload Lagu</button><small id="audioStatus"></small></div></div></section>
+
+<section id="login" class="page"><div class="wrap"><div class="panel" style="max-width:430px;margin:30px auto"><h2>🔐 Login Admin / Sub Admin</h2><div class="notice">Khusus pengelola PTM GNR. Tidak ada pendaftaran akun publik.</div><label>Username / Email</label><input id="loginUser" value="admin" autocomplete="username"><label>Password</label><input id="loginPass" type="password" placeholder="Masukkan password" autocomplete="current-password"><button class="btn" onclick="login()">Login</button><p id="loginStatus"></p></div></div></section>
+
+<section id="admin" class="page"><div class="wrap"><div class="panel"><h2>⚙️ Panel Admin PTM GNR</h2><p id="adminUser"></p><button class="btn red" onclick="logout()">Logout</button></div>
+<div class="panel"><h3>📝 Custom Informasi Halaman Depan — maksimal 5000 karakter</h3><textarea id="setInfo" maxlength="5000" oninput="counter(this)"></textarea><div id="count" class="counter">0/5000</div><button class="btn" onclick="saveSettings({info:val('setInfo')})">Simpan</button></div>
+<div class="panel"><h3>🏓 Profil PTM GNR</h3>
+<label>Deskripsi Profil PTM GNR (Custom)</label>
+<textarea id="setProfile" maxlength="5000" oninput="document.getElementById('profileCount').textContent=this.value.length+'/5000'" placeholder="Tuliskan deskripsi lengkap PTM GNR, sejarah singkat, visi, misi, kegiatan, fasilitas GOR, komunitas, prestasi, dan informasi lainnya..."></textarea>
+<div id="profileCount" class="counter">0/5000</div>
+<button class="btn" onclick="saveSettings({profile:val('setProfile')})">Simpan Deskripsi Profil</button>
+</div>
+<div class="panel"><h3>📍 Alamat GOR & WhatsApp Panitia</h3><textarea id="setAddress"></textarea><input id="setWa" placeholder="Nomor WA panitia"><button class="btn" onclick="saveSettings({address:val('setAddress'),wa:val('setWa')})">Simpan</button></div>
+<div class="panel"><h3>🔑 Ganti Password</h3><div class="notice">Setelah login, Anda dapat mengganti password melalui menu ini.</div><label>Password Baru</label><input id="newPass" type="password" minlength="6"><label>Ulangi Password Baru</label><input id="newPass2" type="password" minlength="6"><button class="btn" onclick="changePassword()">Simpan Password</button><p id="passStatus"></p></div><div class="panel"><h3>👤 Sub Admin — Hak Akses</h3><div class="notice">Ketua/Admin utama dapat membuat Sub Admin dan memilih fitur yang boleh dikelola dengan centangan.</div><div class="grid2"><div><label>Nama</label><input id="saNama"></div><div><label>Email</label><input id="saEmail" type="email"></div><div><label>Password Awal</label><input id="saPass" type="password" minlength="6"></div><div><label>Status</label><select id="saStatus"><option>Aktif</option><option>Nonaktif</option></select></div></div><label>Centang Hak Akses</label><div class="grid3"><label><input type="checkbox" class="perm" value="member"> Member</label><label><input type="checkbox" class="perm" value="iuran"> Iuran</label><label><input type="checkbox" class="perm" value="event"> Event</label><label><input type="checkbox" class="perm" value="ranking"> Ranking</label><label><input type="checkbox" class="perm" value="latihan"> Latihan/GOR</label><label><input type="checkbox" class="perm" value="coach"> Coach</label><label><input type="checkbox" class="perm" value="galeri"> Galeri/Lagu</label><label><input type="checkbox" class="perm" value="organisasi"> Organisasi</label><label><input type="checkbox" class="perm" value="pengaturan"> Pengaturan</label></div><div class="actions"><button class="btn" onclick="createSubAdmin()">➕ Buat Sub Admin</button><button class="btn light" onclick="loadSubAdmins()">🔄 Muat Daftar</button></div><div class="table"><table><thead><tr><th>Nama</th><th>Email</th><th>Status</th><th>Hak Akses</th></tr></thead><tbody id="subAdmins"></tbody></table></div></div><div class="panel"><h3>🖼️ Upload Logo PTM GNR</h3><input id="logo" type="file" accept="image/*"><button class="btn" onclick="uploadLogo()">Upload Logo</button><small id="logoStatus"></small></div></div></section>
+
+<footer><div class="foot"><b>PTM GNR — OTEWE JAGO 🏓</b><p id="foot">Komunitas tenis meja, latihan, liga dan turnamen internal.</p></div></footer>
+
+<script>
+const CFG={apiKey:'AIzaSyCE4SDWrZekN_zuqGI4HHwliB1mi-iurg',authDomain:'ping-pong-shop.firebaseapp.com',projectId:'ping-pong-shop',storageBucket:'ping-pong-shop.firebasestorage.app',messagingSenderId:'691923649862',appId:'1:691923649862:web:23c42e311f7342110b9147'};
+let auth,fs,st,isAdmin=false,currentRole='publik',currentPermissions=[];
+const S={members:[],events:[],history:[],dues:[],gallery:[],music:[],training:[],coaches:[],settings:{info:'Selamat datang di situs resmi PTM GNR. Tempat berkumpul, berlatih, bertanding, dan berkembang bersama penghobi tenis meja.',profile:'PTM GNR adalah tempat olahraga tenis meja dan komunitas member untuk berlatih, bersilaturahmi, serta berprestasi.',address:'',wa:'',gorStatus:'Buka',gorReason:'',org:''}};
+const v=id=>(document.getElementById(id)?.value||'').trim(), esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));document.getElementById(id)?.classList.add('on');window.scrollTo(0,0);render();}
+async function col(n,admin=false){if(!fs)return[];try{let q=fs.collection('ptmgnr_'+n);if(!admin)return (await q.get()).docs.map(d=>({id:d.id,...d.data()}));return (await q.get()).docs.map(d=>({id:d.id,...d.data()}));}catch(e){return[]}}
+async function load(){S.members=await col('members');S.events=await col('events');S.history=await col('history');S.gallery=await col('gallery');S.music=await col('music');S.training=await col('training');S.coaches=await col('coaches');if(isAdmin)S.dues=await col('dues',true);try{let d=await fs.collection('ptmgnr_settings').doc('main').get();if(d.exists)Object.assign(S.settings,d.data())}catch(e){}render();}
+function render(){renderMembers();renderRank();renderEvents();renderHistory();renderDues();renderGallery();renderMusic();renderTraining();renderCoach();renderOrg();renderHome();if(isAdmin)renderAdmin();}
+
+function renderTraining(){
+  const days=['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+  const rows=S.training.sort((a,b)=>days.indexOf(a.hari)-days.indexOf(b.hari));
+  trainingTable.innerHTML=rows.map(x=>'<tr><td>'+esc(x.hari)+'</td><td>'+esc(x.jam||'-')+'</td><td>'+esc(x.keterangan||'-')+'</td></tr>').join('')||'<tr><td colspan="3">Jadwal belum diisi.</td></tr>';
+  trainingSchedule.innerHTML=rows.slice(0,6).map(x=>'<div class="card"><b>🏓 '+esc(x.hari)+'</b><p>'+esc(x.jam||'-')+'</p><small>'+esc(x.keterangan||'Latihan PTM GNR')+'</small></div>').join('')||'<div class="card">Belum ada jadwal latihan.</div>';
+  const status=S.settings.gorStatus||'Buka';
+  gorStatusPublic.innerHTML=status==='Libur'
+    ? '<div class="notice" style="border-color:#fecaca;background:#fef2f2;color:#991b1b"><b>🔴 GOR LIBUR</b><br>'+esc(S.settings.gorReason||'GOR sedang libur.')+'</div>'
+    : '<div class="notice"><b>🟢 GOR BUKA</b><br>Silakan mengikuti jadwal latihan yang tersedia.</div>';
+}
+function renderCoach(){
+  coachPublic.innerHTML=S.coaches.map(x=>'<div class="card"><h3>🏓 '+esc(x.nama)+'</h3><p><b>'+esc(x.hari)+'</b> • '+esc(x.jam||'-')+'</p><p>'+esc(x.program||'-')+'</p><small>'+esc(x.catatan||'')+'</small></div>').join('')||'<div class="card">Jadwal coach belum diisi.</div>';
+}
+function renderOrg(){
+  orgPublic.innerHTML=esc(S.settings.org||'Struktur organisasi belum diisi.').replace(/\n/g,'<br>');
+}
+
+function renderHome(){document.getElementById('heroInfo').textContent=S.settings.info;logoHome.innerHTML=S.settings.logo?'<img src="'+esc(S.settings.logo)+'" style="max-width:110px;max-height:110px;background:#fff;border-radius:16px;padding:8px;margin-bottom:10px">':'';document.getElementById('homeInfo').innerHTML=esc(S.settings.info).replace(/\n/g,'<br>');document.getElementById('profile').innerHTML=esc(S.settings.profile).replace(/\n/g,'<br>');document.getElementById('contact').innerHTML=esc(S.settings.address).replace(/\n/g,'<br>')+'<br>WhatsApp: '+esc(S.settings.wa);document.getElementById('foot').textContent=S.settings.address||'Komunitas tenis meja, latihan, liga dan turnamen internal.';nMember.textContent=S.members.length;nActive.textContent=S.members.filter(x=>(x.status||'Aktif')==='Aktif').length;nEvent.textContent=S.events.length;nPodium.textContent=S.history.length;homeEvents.innerHTML=S.events.slice(0,3).map(e=>'<div class="card"><b>'+esc(e.nama)+'</b><p>'+esc(e.jenis)+' • '+esc(e.tanggal||'-')+'</p><small>'+esc(e.lokasi||'')+'</small></div>').join('')||'<div class="card">Belum ada event.</div>';let now=new Date();let b=S.members.filter(x=>x.tglLahir).map(x=>{let d=new Date(x.tglLahir),z=new Date(now.getFullYear(),d.getMonth(),d.getDate());if(z<new Date(now.getFullYear(),now.getMonth(),now.getDate()))z.setFullYear(now.getFullYear()+1);return{x,z}}).sort((a,b)=>a.z-b.z).slice(0,3);birthdays.innerHTML=b.map(o=>'<div class="card">🎂 <b>'+esc(o.x.nama)+'</b><p>'+o.z.toLocaleDateString('id-ID',{day:'2-digit',month:'long'})+'</p><small>Semoga sehat, sukses dan makin jago! 🏓</small></div>').join('')||'<div class="card">Belum ada data.</div>'}
+function renderMembers(){let q=(v('search')).toLowerCase();let a=S.members.filter(x=>(x.nama||'').toLowerCase().includes(q));members.innerHTML=a.map((x,i)=>'<tr><td>'+(i+1)+'</td><td><b>'+esc(x.nama)+'</b></td><td>'+esc(x.divisi||'-')+'</td><td>'+Number(x.poin||0)+'</td><td><span class="badge '+((x.status||'Aktif')==='Aktif'?'ok':'wait')+'">'+esc(x.status||'Aktif')+'</span></td></tr>').join('')||'<tr><td colspan="5">Belum ada member.</td></tr>'}
+function renderRank(){let a=[...S.members].sort((a,b)=>Number(b.poin||0)-Number(a.poin||0));rank.innerHTML=a.map((x,i)=>'<tr><td><b>'+(i+1)+'</b></td><td>'+esc(x.nama)+'</td><td>'+esc(x.divisi||'-')+'</td><td><b>'+Number(x.poin||0)+'</b></td></tr>').join('')||'<tr><td colspan="4">Belum ada data.</td></tr>'}
+function renderEvents(){events.innerHTML=S.events.map(e=>'<div class="card"><h3>'+esc(e.nama)+'</h3><p>🏓 '+esc(e.jenis)+'<br>📅 '+esc(e.tanggal||'-')+'<br>📍 '+esc(e.lokasi||'-')+'</p>'+esc(e.ket||'')+'</div>').join('')||'<div class="card">Belum ada event.</div>';pEvent.innerHTML=S.events.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.nama)+'</option>').join('')}
+function renderHistory(){history.innerHTML=S.history.map(x=>'<tr><td>'+esc(x.tanggal||'-')+'</td><td>'+esc(x.eventNama||'-')+'</td><td>🥇 '+esc(x.p1||'-')+'</td><td>🥈 '+esc(x.p2||'-')+'</td><td>🥉 '+esc(x.p3||'-')+'</td></tr>').join('')||'<tr><td colspan="5">Belum ada histori.</td></tr>'}
+function renderDues(){if(!isAdmin)return;dMember.innerHTML=S.members.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.nama)+'</option>').join('');dues.innerHTML=S.dues.map(x=>'<tr><td>'+esc(x.bulan)+'</td><td>'+esc(x.nama)+'</td><td><span class="badge '+(x.status==='Sudah Bayar'?'ok':'wait')+'">'+esc(x.status)+'</span></td><td>Rp '+Number(x.nominal||0).toLocaleString('id-ID')+'</td><td><button class="btn light" onclick=wa('+JSON.stringify(x).replaceAll('"','&quot;')+')>WhatsApp</button></td></tr>').join('')||'<tr><td colspan="5">Belum ada data.</td></tr>'}
+function renderGallery(){gallery.innerHTML=S.gallery.map(x=>'<figure><img src="'+esc(x.url)+'"><figcaption>'+esc(x.caption||'Galeri PTM GNR')+'</figcaption></figure>').join('')||'<div class="card">Belum ada foto.</div>'}
+function renderMusic(){music.innerHTML=S.music.map(x=>'<div><b>🎵 '+esc(x.title||'Lagu PTM GNR')+'</b><br><audio controls src="'+esc(x.url)+'"></audio></div>').join('<hr>')||'Belum ada lagu.'}
+function renderAdmin(){setInfo.value=S.settings.info||'';setProfile.value=S.settings.profile||'';profileCount.textContent=(S.settings.profile||'').length+'/5000';setAddress.value=S.settings.address||'';setWa.value=S.settings.wa||'';setOrg.value=S.settings.org||'';orgCount.textContent=(S.settings.org||'').length+'/5000';adminUser.textContent='Login sebagai '+(auth?.currentUser?.email||'Admin');counter(setInfo)}
+function counter(x){count.textContent=x.value.length+'/5000'}
+async function add(n,d){d.createdAt=firebase.firestore.FieldValue.serverTimestamp();return fs.collection('ptmgnr_'+n).add(d)}
+async function registerMember(){let d={nama:v('rNama'),wa:v('rWa'),tglLahir:v('rBirth'),divisi:v('rDiv'),alamat:v('rAlamat'),klub:v('rKlub'),poin:0,status:'Aktif'};if(!d.nama||!d.wa)return alert('Nama dan WhatsApp wajib diisi.');try{await add('members',d);alert('Pendaftaran berhasil dikirim.');await load()}catch(e){alert('Gagal: '+e.message)}}
+async function addMember(){let d={nama:v('aNama'),wa:v('aWa'),tglLahir:v('aBirth'),divisi:v('aDiv'),alamat:v('aAlamat'),poin:Number(v('aPoin')||0),status:'Aktif',klub:'PTM GNR'};if(!d.nama)return alert('Nama wajib diisi.');try{await add('members',d);alert('Member tersimpan.');await load()}catch(e){alert(e.message)}}
+async function addEvent(){let d={nama:v('eNama'),jenis:v('eJenis'),tanggal:v('eTgl'),lokasi:v('eLok'),ket:v('eKet')};if(!d.nama)return alert('Nama event wajib diisi.');try{await add('events',d);alert('Event tersimpan.');await load()}catch(e){alert(e.message)}}
+async function addPodium(){let e=S.events.find(x=>x.id===v('pEvent'));if(!e)return alert('Pilih event.');try{await add('history',{eventId:e.id,eventNama:e.nama,tanggal:e.tanggal||new Date().toISOString().slice(0,10),p1:v('p1'),p2:v('p2'),p3:v('p3')});alert('Histori podium tersimpan.');await load()}catch(e){alert(e.message)}}
+async function saveDue(){let m=S.members.find(x=>x.id===v('dMember'));if(!m)return alert('Pilih member.');try{await add('dues',{bulan:v('dMonth')||new Date().toISOString().slice(0,7),memberId:m.id,nama:m.nama,wa:m.wa,status:v('dStatus'),nominal:Number(v('dNominal')||0)});alert('Iuran tersimpan.');await load()}catch(e){alert(e.message)}}
+function wa(x){let n=String(x.wa||'').replace(/\D/g,'');if(n.startsWith('0'))n='62'+n.slice(1);let s='Halo '+x.nama+', informasi iuran PTM GNR bulan '+x.bulan+': '+x.status+'. Terima kasih. PTM GNR — Otewe Jago!';open('https://wa.me/'+n+'?text='+encodeURIComponent(s),'_blank')}
+
+async function saveGorStatus(){
+  const d={gorStatus:v('gorStatus'),gorReason:v('gorReason')};
+  await saveSettings(d);
+  if(d.gorStatus==='Libur') alert('Status GOR diset LIBUR. Pesan WhatsApp sudah dapat dikirim melalui tombol Kirim Info Libur ke WhatsApp.');
+}
+function sendGorHolidayWA(){
+  if((S.settings.gorStatus||'Buka')!=='Libur') return alert('Status GOR saat ini bukan Libur.');
+  const nums=String(S.settings.wa||'').split(/[,;\s]+/).map(x=>x.replace(/\D/g,'')).filter(Boolean).map(n=>n.startsWith('0')?'62'+n.slice(1):n);
+  const msg='📢 INFORMASI PTM GNR\\n\\nGOR PTM GNR hari ini LIBUR.\\nAlasan: '+(S.settings.gorReason||'Ada kegiatan khusus.')+'\\n\\nMohon diperhatikan dan terima kasih.\\nPTM GNR — Otewe Jago! 🏓';
+  if(!nums.length) return alert('Nomor WhatsApp panitia belum diisi di Pengaturan Admin.');
+  if(nums.length===1) return open('https://wa.me/'+nums[0]+'?text='+encodeURIComponent(msg),'_blank');
+  open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  alert('Pesan libur sudah disiapkan. Untuk pengiriman otomatis ke banyak member diperlukan WhatsApp Business/API.');
+}
+async function addTraining(){
+  const d={hari:v('trDay'),jam:v('trTime'),keterangan:v('trNote')};
+  if(!d.jam) return alert('Jam latihan wajib diisi.');
+  try{await add('training',d);alert('Jadwal latihan tersimpan.');await load();}catch(e){alert(e.message)}
+}
+async function addCoach(){
+  const d={nama:v('cName'),hari:v('cDay'),jam:v('cTime'),program:v('cProgram'),catatan:v('cNote')};
+  if(!d.nama||!d.jam) return alert('Nama coach dan jam wajib diisi.');
+  try{await add('coaches',d);alert('Jadwal coach tersimpan.');await load();}catch(e){alert(e.message)}
+}
+
+async function saveSettings(d){try{await fs.collection('ptmgnr_settings').doc('main').set(d,{merge:true});Object.assign(S.settings,d);alert('Tersimpan.');render()}catch(e){alert(e.message)}}
+async function upload(file,path){if(!st)throw Error('Firebase Storage belum siap.');if(file.size>8*1024*1024)throw Error('Maksimal 8 MB.');let r=st.ref(path);await r.put(file);return r.getDownloadURL()}
+async function uploadLogo(){let f=logo.files[0];if(!f)return alert('Pilih logo.');try{let u=await upload(f,'ptmgnr/logo/'+Date.now()+'_'+f.name);await saveSettings({logo:u});logoStatus.textContent='Logo berhasil diunggah.'}catch(e){logoStatus.textContent=e.message}}
+async function uploadPhoto(){let f=photo.files[0];if(!f)return alert('Pilih foto.');try{let u=await upload(f,'ptmgnr/gallery/'+Date.now()+'_'+f.name);await add('gallery',{url:u,caption:v('caption')});photoStatus.textContent='Berhasil.';load()}catch(e){photoStatus.textContent=e.message}}
+async function uploadAudio(){let f=audio.files[0];if(!f)return alert('Pilih lagu.');try{let u=await upload(f,'ptmgnr/music/'+Date.now()+'_'+f.name);await add('music',{url:u,title:v('title')||f.name});audioStatus.textContent='Berhasil.';load()}catch(e){audioStatus.textContent=e.message}}
+async function login(){const raw=v('loginUser').toLowerCase(),pass=v('loginPass');if(!raw||!pass)return alert('Username dan password wajib diisi.');let email=raw==='admin'?'admin@ptmgnr.my.id':raw;if(!email.includes('@'))email+='@ptmgnr.my.id';try{await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);await auth.signInWithEmailAndPassword(email,pass);if(email==='admin@ptmgnr.my.id'){isAdmin=true;currentRole='admin';currentPermissions=['*'];}else{const d=await fs.collection('ptmgnr_subadmins').doc(auth.currentUser.uid).get();if(!d.exists||d.data().status==='Nonaktif'){await auth.signOut();throw new Error('Sub Admin tidak aktif atau belum terdaftar.')}isAdmin=false;currentRole='subadmin';currentPermissions=d.data().permissions||[];}document.body.classList.add('isAdmin');await load();alert('Login berhasil.');show('admin')}catch(e){loginStatus.textContent=e.message;alert('Login gagal.\n\n'+(e.code==='auth/invalid-credential'?'Username atau password salah.':e.message)+'\n\nUsername Admin: admin')}}
+function hasPerm(p){return isAdmin||currentPermissions.includes('*')||currentPermissions.includes(p)}
+async function changePassword(){const a=v('newPass'),b=v('newPass2');if(!auth.currentUser)return alert('Silakan login terlebih dahulu.');if(a.length<6)return alert('Password minimal 6 karakter.');if(a!==b)return alert('Ulangi password tidak sama.');try{await auth.currentUser.updatePassword(a);passStatus.textContent='Password berhasil diganti.';alert('Password berhasil diganti.')}catch(e){alert('Gagal mengganti password: '+e.message+'\nSilakan logout dan login ulang jika sesi terlalu lama.')}}
+async function createSubAdmin(){if(!isAdmin)return alert('Hanya Ketua/Admin utama yang boleh membuat Sub Admin.');const nama=v('saNama'),email=v('saEmail').toLowerCase(),pass=v('saPass'),status=v('saStatus');const permissions=[...document.querySelectorAll('.perm:checked')].map(x=>x.value);if(!nama||!email||!pass)return alert('Nama, email dan password wajib diisi.');if(pass.length<6)return alert('Password minimal 6 karakter.');if(!permissions.length)return alert('Centang minimal satu hak akses.');try{const appName='ptmgnrSubAdminCreator';const app=firebase.apps.find(a=>a.name===appName)||firebase.initializeApp(CFG,appName);const aa=app.auth();const cred=await aa.createUserWithEmailAndPassword(email,pass);await fs.collection('ptmgnr_subadmins').doc(cred.user.uid).set({nama,email,status,permissions,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdBy:auth.currentUser.email});await aa.signOut();alert('Sub Admin berhasil dibuat.');document.querySelectorAll('.perm').forEach(x=>x.checked=false);document.getElementById('saNama').value='';document.getElementById('saEmail').value='';document.getElementById('saPass').value='';loadSubAdmins()}catch(e){alert('Gagal membuat Sub Admin.\n\n'+e.message)}}
+async function loadSubAdmins(){if(!isAdmin)return;try{const snap=await fs.collection('ptmgnr_subadmins').get();subAdmins.innerHTML=snap.docs.map(d=>{const x=d.data();return `<tr><td>${esc(x.nama)}</td><td>${esc(x.email)}</td><td>${esc(x.status||'Aktif')}</td><td>${esc((x.permissions||[]).join(', '))}</td></tr>`}).join('')||'<tr><td colspan="4">Belum ada Sub Admin.</td></tr>'}catch(e){subAdmins.innerHTML='<tr><td colspan="4">Gagal membaca Sub Admin.</td></tr>'}}
+async function logout(){await auth.signOut();isAdmin=false;currentRole='publik';currentPermissions=[];document.body.classList.remove('isAdmin');show('home')}
+try{firebase.initializeApp(CFG);auth=firebase.auth();fs=firebase.firestore();st=firebase.storage();auth.onAuthStateChanged(async u=>{if(!u){isAdmin=false;currentRole='publik';currentPermissions=[];document.body.classList.remove('isAdmin');await load();return;}const email=(u.email||'').toLowerCase();if(email==='admin@ptmgnr.my.id'){isAdmin=true;currentRole='admin';currentPermissions=['*'];}else{try{const d=await fs.collection('ptmgnr_subadmins').doc(u.uid).get();if(!d.exists||d.data().status==='Nonaktif'){await auth.signOut();return;}isAdmin=false;currentRole='subadmin';currentPermissions=d.data().permissions||[];}catch(e){console.error(e);return;}}document.body.classList.add('isAdmin');await load();})}catch(e){console.error(e);render()}
+</script>
+</body></html>
